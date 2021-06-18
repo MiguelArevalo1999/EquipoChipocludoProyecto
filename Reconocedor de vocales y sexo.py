@@ -187,6 +187,7 @@ def abrirArchivo_a_Usar():
     filename = filedialog.askopenfilename(initialdir="C:",title = "Selecciona un archivo.wav para predecir",filetypes=(("wav files","*.wav"),("all files","*.*")))
     head, tail = os.path.split(filename)
     filename = tail
+    print(filename)
 
 def grabarAudio():
     # Sampling frequency
@@ -217,13 +218,13 @@ def ejecutarProceso():
     i = np.imag(x)#obtiene las componenetes imaginarias
     X = make_X(r,i)
     modelV=make_model(X,y)#entrena el modelo para predecir vocales
-    print(make_prediction_svm(modelV,'i.wav'))
+    print(make_prediction_svm(modelV,filename))
     xs,ys=make_x_y(['H','M'])
     rs= np.real(xs)#obtiene las componenetes reales
     iS = np.imag(xs)#obtiene las componenetes imaginaria
     XS = make_X(rs,iS)
     modelSexo=make_model(XS,ys)#entrena el modelo para predecir sexos
-    print(make_prediction_svm(modelSexo,'i.wav'))
+    print(make_prediction_svm(modelSexo,filename))
 
 # if __name__ == "__main__":
 #     x,y=make_x_y(['A','E','I','O','U'])
