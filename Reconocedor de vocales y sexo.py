@@ -11,6 +11,7 @@ import tkinter as tk
 import sounddevice as sd
 from scipy.io.wavfile import write
 import wavio as wv
+import cv2
 
 filename = None
 
@@ -35,6 +36,7 @@ imageni=tk.PhotoImage(file="ipn.png")
 imageni_sub=imageni.subsample(15)
 widgeti=ttk.Label(image=imageni_sub)
 widgeti.place(x=400,y=5)
+
 
 text = Label(text="Escuela Superior de Cómputo\n\n Arévalo Andrade Miguel Ángel \n Esquivel Salvatti José Luis\n \
             López Morales Miguel Ángel\n Vaca García Jesús Fernando\n Vargas Espino Carlos Hassan")
@@ -219,13 +221,24 @@ def ejecutarProceso():
     i = np.imag(x)#obtiene las componenetes imaginarias
     X = make_X(r,i)
     modelV=make_model(X,y)#entrena el modelo para predecir vocales
-    print(make_prediction_svm(modelV,filename))
+    messagebox.showinfo(title= "Reconocimiento", message = f'Letra {make_prediction_svm(modelV,filename).lower()} reconocida' )
     xs,ys=make_x_y(['H','M'])
     rs= np.real(xs)#obtiene las componenetes reales
     iS = np.imag(xs)#obtiene las componenetes imaginaria
     XS = make_X(rs,iS)
     modelSexo=make_model(XS,ys)#entrena el modelo para predecir sexos
     print(make_prediction_svm(modelSexo,filename))
+    image = ""
+    if make_prediction_svm(modelSexo,filename) == 'H':
+        image = 'hombre.png'
+    elif make_prediction_svm(modelSexo,filename) == 'M':
+        image = 'mujer.png'
+    
+    img = cv2.imread(image)
+    img_resized = cv2.resize(img, (350, 280)) 
+    cv2.imshow('Genero detectado',img_resized)
+
+    
 
 abrir=Button(raiz, text="Seleccionar archivo de audio",command=abrirArchivo_a_Usar)
 abrir.place(x=25,y=130)
