@@ -8,6 +8,9 @@ from sklearn import svm
 from tkinter import *
 from tkinter import ttk, messagebox, filedialog
 import tkinter as tk
+import sounddevice as sd
+from scipy.io.wavfile import write
+import wavio as wv
 
 raiz = Tk()
 raiz.title("Proyecto Final Detección de vocales Eq. Chipocludo")
@@ -176,6 +179,9 @@ def make_X(x,y):
 def lsi(path):
     '''Lee todos los archivos dentro de path'''
     return([obj.name for obj in scandir(path) if obj.is_file()])
+
+def abrirArchivo_a_Usar():
+    raiz.archivo=filedialog.askopenfilename(initialdir="C:",title = "Selecciona un archivo.wav para predecir",filetypes=(("wav files","*.wav"),("all files","*.*")))
     
 if __name__ == "__main__":
     x,y=make_x_y(['A','E','I','O','U'])
@@ -190,5 +196,14 @@ if __name__ == "__main__":
     XS = make_X(rs,iS)
     modelSexo=make_model(XS,ys)#entrena el modelo para predecir sexos
     print(make_prediction_svm(modelSexo,'i.wav'))
+
+abrir=Button(raiz, text="Seleccionar archivo de audio",command=abrirArchivo_a_Usar)
+abrir.place(x=25,y=130)
+
+start=Button(raiz, text="Ejecutar",command="")
+start.place(x=150,y=300)  
+
+record_audio=Button(raiz, text="Grabar audio",command="")
+record_audio.place(x=250,y=300) 
 
 raiz.mainloop()
