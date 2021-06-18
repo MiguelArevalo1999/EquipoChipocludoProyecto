@@ -194,7 +194,7 @@ def abrirArchivo_a_Usar():
 
 def grabarAudio():
     # Sampling frequency
-    freq = 44100
+    freq = 48100
     
     # Recording duration
     duration = 1
@@ -207,13 +207,10 @@ def grabarAudio():
     
     # Record audio for the given number of seconds
     sd.wait()
-    
-    # This will convert the NumPy array to an audio
-    # file with the given sampling frequency
-    write("recording0.wav", freq, recording)
+   
     
     # Convert the NumPy array to audio file
-    wv.write("recording1.wav", recording, freq, sampwidth=2)
+    wv.write("Grabacion_actual.wav", recording, freq, sampwidth=2)
 
 def ejecutarProceso():
     x,y=make_x_y(['A','E','I','O','U'])
