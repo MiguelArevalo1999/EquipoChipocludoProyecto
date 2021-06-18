@@ -12,6 +12,8 @@ import sounddevice as sd
 from scipy.io.wavfile import write
 import wavio as wv
 
+filename = None
+
 raiz = Tk()
 raiz.title("Proyecto Final Detección de vocales Eq. Chipocludo")
 raiz.resizable(0,0)
@@ -181,9 +183,35 @@ def lsi(path):
     return([obj.name for obj in scandir(path) if obj.is_file()])
 
 def abrirArchivo_a_Usar():
-    raiz.archivo=filedialog.askopenfilename(initialdir="C:",title = "Selecciona un archivo.wav para predecir",filetypes=(("wav files","*.wav"),("all files","*.*")))
+    global filename
+    filename = filedialog.askopenfilename(initialdir="C:",title = "Selecciona un archivo.wav para predecir",filetypes=(("wav files","*.wav"),("all files","*.*")))
+    head, tail = os.path.split(filename)
+    filename = tail
+
+def grabarAudio():
+    # Sampling frequency
+    freq = 44100
     
-if __name__ == "__main__":
+    # Recording duration
+    duration = 5
+    
+    # Start recorder with the given values 
+    # of duration and sample frequency
+    print("Ya estoy grabando, ponte verga")
+    recording = sd.rec(int(duration * freq), 
+                    samplerate=freq, channels=2)
+    
+    # Record audio for the given number of seconds
+    sd.wait()
+    
+    # This will convert the NumPy array to an audio
+    # file with the given sampling frequency
+    write("recording0.wav", freq, recording)
+    
+    # Convert the NumPy array to audio file
+    wv.write("recording1.wav", recording, freq, sampwidth=2)
+
+def ejecutarProceso():
     x,y=make_x_y(['A','E','I','O','U'])
     r= np.real(x)#obtiene las componenetes reales
     i = np.imag(x)#obtiene las componenetes imaginarias
@@ -197,13 +225,27 @@ if __name__ == "__main__":
     modelSexo=make_model(XS,ys)#entrena el modelo para predecir sexos
     print(make_prediction_svm(modelSexo,'i.wav'))
 
+# if __name__ == "__main__":
+#     x,y=make_x_y(['A','E','I','O','U'])
+#     r= np.real(x)#obtiene las componenetes reales
+#     i = np.imag(x)#obtiene las componenetes imaginarias
+#     X = make_X(r,i)
+#     modelV=make_model(X,y)#entrena el modelo para predecir vocales
+#     print(make_prediction_svm(modelV,'i.wav'))
+#     xs,ys=make_x_y(['H','M'])
+#     rs= np.real(xs)#obtiene las componenetes reales
+#     iS = np.imag(xs)#obtiene las componenetes imaginaria
+#     XS = make_X(rs,iS)
+#     modelSexo=make_model(XS,ys)#entrena el modelo para predecir sexos
+#     print(make_prediction_svm(modelSexo,'i.wav'))
+
 abrir=Button(raiz, text="Seleccionar archivo de audio",command=abrirArchivo_a_Usar)
 abrir.place(x=25,y=130)
 
-start=Button(raiz, text="Ejecutar",command="")
+start=Button(raiz, text="Ejecutar",command = ejecutarProceso)
 start.place(x=150,y=300)  
 
-record_audio=Button(raiz, text="Grabar audio",command="")
+record_audio=Button(raiz, text="Grabar audio",command = grabarAudio)
 record_audio.place(x=250,y=300) 
 
 raiz.mainloop()
