@@ -194,7 +194,7 @@ def grabarAudio():
     freq = 44100
     
     # Recording duration
-    duration = 5
+    duration = 1
     
     # Start recorder with the given values 
     # of duration and sample frequency
@@ -225,20 +225,6 @@ def ejecutarProceso():
     XS = make_X(rs,iS)
     modelSexo=make_model(XS,ys)#entrena el modelo para predecir sexos
     print(make_prediction_svm(modelSexo,filename))
-
-# if __name__ == "__main__":
-#     x,y=make_x_y(['A','E','I','O','U'])
-#     r= np.real(x)#obtiene las componenetes reales
-#     i = np.imag(x)#obtiene las componenetes imaginarias
-#     X = make_X(r,i)
-#     modelV=make_model(X,y)#entrena el modelo para predecir vocales
-#     print(make_prediction_svm(modelV,'i.wav'))
-#     xs,ys=make_x_y(['H','M'])
-#     rs= np.real(xs)#obtiene las componenetes reales
-#     iS = np.imag(xs)#obtiene las componenetes imaginaria
-#     XS = make_X(rs,iS)
-#     modelSexo=make_model(XS,ys)#entrena el modelo para predecir sexos
-#     print(make_prediction_svm(modelSexo,'i.wav'))
 
 abrir=Button(raiz, text="Seleccionar archivo de audio",command=abrirArchivo_a_Usar)
 abrir.place(x=25,y=130)
