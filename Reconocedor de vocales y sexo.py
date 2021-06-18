@@ -137,6 +137,7 @@ def make_model(x,y):
     return clf 
 
 def make_prediction_svm(model,fname):
+    global filename
     '''Hace una prediccion recibiendo el modelo entrenado y el nombre del archivo a leer
     por modelos de sckit learn se tiene que hacer dos predicciones pero solo retorna el valor a predecir'''
     rate, data = wav.read(fname)
@@ -152,7 +153,7 @@ def make_prediction_svm(model,fname):
     vec1.append(r)
     vec1.append(i)
     vec.append(vec1)
-    rate, data = wav.read('i.wav')
+    rate, data = wav.read(filename)
     data = np.setdiff1d(data,0)
     data = np.array(data[:32])
     fft_out = FFT(data)
