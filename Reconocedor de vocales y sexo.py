@@ -5,6 +5,35 @@ import numpy as np
 from os import scandir
 import os
 from sklearn import svm
+from tkinter import *
+from tkinter import ttk, messagebox, filedialog
+import tkinter as tk
+
+raiz = Tk()
+raiz.title("Proyecto Final Detección de vocales Eq. Chipocludo")
+raiz.resizable(0,0)
+raiz.geometry("500x350")
+raiz.config(bg="cyan")
+
+myFrame=Frame()
+myFrame.pack(side="top")
+myFrame.config(bg="white")
+
+#Logo ESCOM
+imagen=tk.PhotoImage(file="logoescom.png")
+imagen_sub=imagen.subsample(12)
+widget=ttk.Label(image=imagen_sub)
+widget.place(x=5,y=5)
+
+#Logo IPN
+imageni=tk.PhotoImage(file="ipn.png")
+imageni_sub=imageni.subsample(15)
+widgeti=ttk.Label(image=imageni_sub)
+widgeti.place(x=400,y=5)
+
+text = Label(text="Escuela Superior de Cómputo\n\n Arévalo Andrade Miguel Ángel \n Esquivel Salvatti José Luis\n \
+            López Morales Miguel Ángel\n Vaca García Jesús Fernando\n Vargas Espino Carlos Hassan")
+text.place(x=155,y=7)
 
 def DFT_slow(x):
     """Compute the discrete Fourier Transform of the 1D array x"""
@@ -161,3 +190,5 @@ if __name__ == "__main__":
     XS = make_X(rs,iS)
     modelSexo=make_model(XS,ys)#entrena el modelo para predecir sexos
     print(make_prediction_svm(modelSexo,'i.wav'))
+
+raiz.mainloop()
