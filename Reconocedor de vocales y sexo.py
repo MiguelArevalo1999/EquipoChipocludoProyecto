@@ -26,13 +26,13 @@ myFrame.pack(side="top")
 myFrame.config(bg="white")
 
 #Logo ESCOM
-imagen=tk.PhotoImage(file="logoescom.png")
+imagen=tk.PhotoImage(file="Imagenes GUI/logoescom.png")
 imagen_sub=imagen.subsample(12)
 widget=ttk.Label(image=imagen_sub)
 widget.place(x=5,y=5)
 
 #Logo IPN
-imageni=tk.PhotoImage(file="ipn.png")
+imageni=tk.PhotoImage(file="Imagenes GUI/ipn.png")
 imageni_sub=imageni.subsample(15)
 widgeti=ttk.Label(image=imageni_sub)
 widgeti.place(x=400,y=5)
@@ -43,7 +43,7 @@ text = Label(text="Escuela Superior de Cómputo\n\n Arévalo Andrade Miguel Áng
 text.place(x=155,y=7)
 
 def DFT_slow(x):
-    """Compute the discrete Fourier Transform of the 1D array x"""
+    """Calcula la transformada discreta de Fourier del arreglo x"""
     x = np.asarray(x, dtype=float)
     N = x.shape[0]
     n = np.arange(N)
@@ -52,13 +52,13 @@ def DFT_slow(x):
     return np.dot(M, x)
 
 def FFT(x):
-    """A recursive implementation of the 1D Cooley-Tukey FFT"""
+    """Una implementación recursiva de la FFT 1D Cooley-Tukey"""
     x = np.asarray(x, dtype=float)
     N = x.shape[0]
     
     if N % 2 > 0:
-        raise ValueError("size of x must be a power of 2")
-    elif N <= 32:  # this cutoff should be optimized
+        raise ValueError("el tamaño de x debe ser una potencia de 2")
+    elif N <= 32: 
         return DFT_slow(x)
     else:
         X_even = FFT(x[::2])
@@ -72,10 +72,10 @@ def read_multiples_wav():
     vocals = ['A','E','I']
     dic = []
     for vocal in vocals:
-        files = lsi(str(os.getcwd())+'/'+vocal)
+        files = lsi(str(os.getcwd())+'/'+"Audios"+"Vocales"+vocal)
         vec,i = 0,0
         for file in files:
-            rate, data = wav.read((str(os.getcwd())+'/'+vocal+'/'+file))
+            rate, data = wav.read((str(os.getcwd())+'/'+"Audios"+"Vocales"+vocal+'/'+file))
             data = np.setdiff1d(data,0)
             data = np.array(data[:32])
             fft_out = FFT(data)
@@ -128,7 +128,7 @@ def make_prediction(proms,fname):
     elif(i[0]==4):
         print('U')
     else:
-        print('Disculpa no te entendi')
+        print('No se pudo detectar la vocal')
     
         
 def make_model(x,y):
@@ -169,11 +169,12 @@ def make_prediction_svm(model,fname):
     vec1.append(i)
     vec.append(vec1)
     vec = np.asarray(vec)
-    return(model.predict(vec)[0])
-    
+    aux = model.predict(vec)[0]
+    return aux[-1]
 
+    
 def make_X(x,y):
-    '''crea la matriz X reciviendo las componenetes reales e imaginarias por separado'''
+    '''crea la matriz X recibiendo las componenetes reales e imaginarias por separado'''
     New_X=[]
     for i in range(len(y)):
         new_X=np.append(x[i], y[i])
@@ -201,7 +202,7 @@ def grabarAudio():
     
     # Start recorder with the given values 
     # of duration and sample frequency
-    print("Ya estoy grabando, ponte verga")
+    print("Ya estoy grabando")
     recording = sd.rec(int(duration * freq), 
                     samplerate=freq, channels=2)
     
@@ -213,13 +214,13 @@ def grabarAudio():
     wv.write("Grabacion_actual.wav", recording, freq, sampwidth=2)
 
 def ejecutarProceso():
-    x,y=make_x_y(['A','E','I','O','U'])
+    x,y=make_x_y(['Audios/Vocales/A','Audios/Vocales/E','Audios/Vocales/I','Audios/Vocales/O','Audios/Vocales/U'])
     r= np.real(x)#obtiene las componenetes reales
     i = np.imag(x)#obtiene las componenetes imaginarias
     X = make_X(r,i)
     modelV=make_model(X,y)#entrena el modelo para predecir vocales
     messagebox.showinfo(title= "Reconocimiento", message = f'Letra {make_prediction_svm(modelV,filename).lower()} reconocida' )
-    xs,ys=make_x_y(['H','M'])
+    xs,ys=make_x_y(['Audios/Genero/H','Audios/Genero/M'])
     rs= np.real(xs)#obtiene las componenetes reales
     iS = np.imag(xs)#obtiene las componenetes imaginaria
     XS = make_X(rs,iS)
@@ -227,9 +228,9 @@ def ejecutarProceso():
     print(make_prediction_svm(modelSexo,filename))
     image = ""
     if make_prediction_svm(modelSexo,filename) == 'H':
-        image = 'hombre.png'
+        image = 'Imagenes GUI/hombre.png'
     elif make_prediction_svm(modelSexo,filename) == 'M':
-        image = 'mujer.png'
+        image = 'Imagenes GUI/mujer.png'
     
     img = cv2.imread(image)
     img_resized = cv2.resize(img, (350, 280)) 
