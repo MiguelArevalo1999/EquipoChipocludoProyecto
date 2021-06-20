@@ -198,7 +198,7 @@ def grabarAudio():
     freq = 48100
     
     # Recording duration
-    duration = 1
+    duration = 2
     
     # Start recorder with the given values 
     # of duration and sample frequency
