@@ -67,25 +67,6 @@ def FFT(x):
         return np.concatenate([X_even + factor[:N / 2] * X_odd,
                                X_even + factor[N / 2:] * X_odd])
 
-def read_multiples_wav():
-    '''Lee archivos wav, en una carpeta, aplica fft y regresa un arreglo con los premedios de cada vocal EN DESUSO '''
-    vocals = ['A','E','I']
-    dic = []
-    for vocal in vocals:
-        files = lsi(str(os.getcwd())+'/'+"Audios"+"Vocales"+vocal)
-        vec,i = 0,0
-        for file in files:
-            rate, data = wav.read((str(os.getcwd())+'/'+"Audios"+"Vocales"+vocal+'/'+file))
-            data = np.setdiff1d(data,0)
-            data = np.array(data[:32])
-            fft_out = FFT(data)
-            mx=np.amax(fft_out)
-            vec += mx
-            i+=1
-        prom = vec/i
-        dic.append(prom)
-    return dic
-
 def make_x_y(labels):
     '''Lee los archivos wav en una carpeta aplica fft y guarda la componenete de mayor frecuencia, 
     regresa el arreglo con dicha componente y la etiqueta de cada cada archivo'''
@@ -106,30 +87,6 @@ def make_x_y(labels):
         i+=1
     return x,y
 
-def make_prediction(proms,fname):
-    '''Hace una prediccion de una vocal tomando los promedios y el nombre del archivo a abrir
-    EN DESUSO'''
-    rate, data = wav.read(fname)
-    data = np.setdiff1d(data,0)
-    data = np.array(data[:32])
-    fft_out = FFT(data)
-    mf=np.amax(fft_out) 
-    vec=np.absolute(proms-mf)
-    print(vec)
-    i = np.where(vec==np.amin(vec))
-    if(i[0]==0):
-        print('A')
-    elif(i[0]==1):
-        print('E')
-    elif(i[0]==2):
-        print('I')
-    elif(i[0]==3):
-        print('O')
-    elif(i[0]==4):
-        print('U')
-    else:
-        print('No se pudo detectar la vocal')
-    
         
 def make_model(x,y):
     '''Crea un modelo de ML basado en el algoritmo de clasificacion del Suport Vector Machine
