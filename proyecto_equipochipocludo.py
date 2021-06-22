@@ -44,52 +44,52 @@ text.place(x=155,y=7)
 
 def DFT_slow(x):
     """Calcula la transformada discreta de Fourier del arreglo x"""
-    x = np.asarray(x, dtype=float)
-    N = x.shape[0]
-    n = np.arange(N)
-    k = n.reshape((N, 1))
-    M = np.exp(-2j * np.pi * k * n / N)
-    return np.dot(M, x)
+    x = np.asarray(x, dtype=float) # Vector de valores de frecuencia
+    N = x.shape[0]  #Regresa la dimension de la matriz de frecuencias
+    n = np.arange(N) #Devuelve valores espaciados uniformemente dentro de un intervalo dado.
+    k = n.reshape((N, 1)) #Redimensionar de N a 1
+    M = np.exp(-2j * np.pi * k * n / N)  #Definicion de la DFT
+    return np.dot(M, x) #Devolver el producto punto de los dos arreglos
 
 def FFT(x):
     """Una implementación recursiva de la FFT 1D Cooley-Tukey"""
-    x = np.asarray(x, dtype=float)
-    N = x.shape[0]
+    x = np.asarray(x, dtype=float) #Componentes del vector x convertir a un vector de tipo flotante
+    N = x.shape[0] #Dimensión del vector dada la restriccion del algoritmo
     
-    if N % 2 > 0:
+    if N % 2 > 0: #Restringir a potencias mayores de 2 (Caso Base)
         raise ValueError("el tamaño de x debe ser una potencia de 2")
     elif N <= 32: 
         return DFT_slow(x)
     else:
-        X_even = FFT(x[::2])
-        X_odd = FFT(x[1::2])
-        factor = np.exp(-2j * np.pi * np.arange(N) / N)
-        return np.concatenate([X_even + factor[:N / 2] * X_odd,
+        X_even = FFT(x[::2]) #Llamada recursiva con los valores pares
+        X_odd = FFT(x[1::2]) #Llamada recursiva con los valores impares
+        factor = np.exp(-2j * np.pi * np.arange(N) / N) # Valores exponenciales de la suma
+        return np.concatenate([X_even + factor[:N / 2] * X_odd, #Concatenacion resultante de las referencias par e impar de x
                                X_even + factor[N / 2:] * X_odd])
 
 def make_x_y(labels):
     '''Lee los archivos wav en una carpeta aplica fft y guarda la componenete de mayor frecuencia, 
     regresa el arreglo con dicha componente y la etiqueta de cada cada archivo'''
-    x,y = [],[]
+    x,y = [],[] #Listas auxiliares para guardar las componentes
     i=0
-    for label in labels:
+    for label in labels: #Para cada ruta se leen todos los archivos de la carpeta
         files = lsi(str(os.getcwd())+'/'+label)
-        for file in files:
+        for file in files: #Para cada archivo 
             rate, data = wav.read(str(os.getcwd())+'/'+label+'/'+file)
-            data = np.setdiff1d(data,0)
-            data = np.array(data[:32])
-            fft_out = FFT(data)
-            fft_mag=np.absolute(fft_out)
-            mf=np.where(fft_mag==np.amax(fft_mag)) 
-            comp=fft_out[mf]
-            x.append(comp)
+            data = np.setdiff1d(data,0) #Devuelve la informacion valiosa del audio quitando los ceros
+            data = np.array(data[:32]) #Crear un arreglo de 32
+            fft_out = FFT(data) #Hacer FFT
+            fft_mag=np.absolute(fft_out) #Valor absoluto del arreglo anterior
+            mf=np.where(fft_mag==np.amax(fft_mag)) #Guardar valores de frecuencia máximos
+            comp=fft_out[mf] #Posición de la frecuencia maxima se guarda en comp
+            x.append(comp)  #Se agregan a las listas auxiliares
             y.append(label)
         i+=1
     return x,y
 
         
 def make_model(x,y):
-    '''Crea un modelo de ML basado en el algoritmo de clasificacion del Suport Vector Machine
+    '''Crea un modelo de ML basado en el algoritmo de clasificacion de la Máquia de Soporte Vectorial
     regresa el modelo entrenado'''
     clf = svm.SVC(gamma='auto')
     clf.fit(x, y)  
