@@ -146,9 +146,10 @@ def lsi(path):
 def abrirArchivo_a_Usar():
     global filename
     filename = filedialog.askopenfilename(initialdir="C:",title = "Selecciona un archivo.wav para predecir",filetypes=(("wav files","*.wav"),("all files","*.*")))
-    head, tail = os.path.split(filename)
-    filename = tail
     print(filename)
+    # head, tail = os.path.split(filename)
+    # filename = tail
+    # print(filename)
 
 def grabarAudio():
     # Sampling frequency
