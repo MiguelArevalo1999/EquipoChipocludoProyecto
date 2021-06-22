@@ -99,19 +99,19 @@ def make_prediction_svm(model,fname):
     global filename
     '''Hace una prediccion recibiendo el modelo entrenado y el nombre del archivo a leer
     por modelos de sckit learn se tiene que hacer dos predicciones pero solo retorna el valor a predecir'''
-    rate, data = wav.read(fname)
-    data = np.setdiff1d(data,0)
-    data = np.array(data[:32])
-    fft_out = FFT(data)
-    fft_mag=np.absolute(fft_out)
-    mf=np.where(fft_mag==np.amax(fft_mag)) 
-    comp=fft_out[mf]
-    r= float(np.real(comp))
-    i = float(np.imag(comp))
-    vec1,vec=[],[]
-    vec1.append(r)
-    vec1.append(i)
-    vec.append(vec1)
+    rate, data = wav.read(fname) #Leer los archivos y se separa en dos variables
+    data = np.setdiff1d(data,0) #Se eliminan los ceros
+    data = np.array(data[:32]) #Se redimensiona a tamaño 32
+    fft_out = FFT(data)  #Ejecutar FFT
+    fft_mag=np.absolute(fft_out)  #Valor absoluto del arreglo anterior
+    mf=np.where(fft_mag==np.amax(fft_mag)) #Guardar valores de frecuencia máximos
+    comp=fft_out[mf]#Posición de la frecuencia maxima se guarda en comp
+    r= float(np.real(comp)) #Se separan las componentes reales
+    i = float(np.imag(comp)) #Se separan las componentes imaginarias
+    vec1,vec=[],[] #Una lista de vectores 
+    vec1.append(r) # Se agregan a la lista
+    vec1.append(i) # Se agregan a la lista 
+    vec.append(vec1) #Se agrega el vector a la lista
     rate, data = wav.read(filename)
     data = np.setdiff1d(data,0)
     data = np.array(data[:32])
